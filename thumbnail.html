@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Thumbnail Sample</title>
+  </head>
+  <body>
+    <img id="preview" src="" width="700" alt="로컬에 있는 이미지가 보여지는 영역">
+    <a id="download" download="thumbnail.jpg" target="_blank">
+      <img id="thumbnail" src="" width="100" alt="썸네일영역 (클릭하면 다운로드 가능)">
+    </a>
+    <input type="file" id="getfile" accept="image/*">
+    <script>
+      var file = document.querySelector('#getfile');
+      file.onchange = function() {
+        var fileList = file.files;
+        console.log('fileList:', fileList);
+
+        var reader = new FileReader();
+        reader.readAsDataURL(fileList[0]);
+
+        reader.onload = function() {
+          document.querySelector('#preview').src = reader.result;
+
+          var tempImage = new Image();
+          tempImage.src = reader.result;
+          console.log('tempImage.src', tempImage.src);
+          tempImage.onload = function() {
+            var canvas = document.createElement('canvas');
+            var canvasContext = canvas.getContext('2d');
+
+            canvas.width = 100;
+            canvas.height = 100;
+
+            canvasContext.drawImage(this, 0, 0, 100, 100);
+            var dataURI = canvas.toDataURL('image/jpeg');
+            document.querySelector('#thumbnail').src = dataURI;
+            console.log('#thumbnail', dataURI);
+            document.querySelector('#download').href = dataURI;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
