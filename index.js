@@ -1,6 +1,8 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var redis = require('socket.io-redis');
+io.adapter(redis({host: '127.0.0.1', port: 6379}));
 var nsp = io.of('/chat');
 
 app.get('/', function(req, res) {
@@ -20,6 +22,11 @@ nsp.on('connection', function(socket) {
   });
 });
 
+nsp.on('CHAT_MESSAGE', function (what) {
+  console.log(JSON.stringify(what));
+});
+
 http.listen(3000, function () {
   console.log('listening on *:3000');
 });
+

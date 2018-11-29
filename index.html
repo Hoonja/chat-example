@@ -23,7 +23,9 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function() {
-        var socket = io('http://localhost:3000/chat');
+        var socket = io('http://localhost:3000/chat', {
+          transports: ['websocket'] // or [ 'websocket', 'polling' ], which is the same thing
+        });
         $('form').submit(function() {
           socket.emit('CHAT_MESSAGE', {message: $('#m').val()});
           $('#m').val('');
